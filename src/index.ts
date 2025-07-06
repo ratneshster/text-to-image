@@ -70,8 +70,7 @@ export default {
   background-color: var(--header-bg);
   padding: 4px 8px;
   border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
+ }
 .theme-toggle label {
   cursor: pointer;
 }
