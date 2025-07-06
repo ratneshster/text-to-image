@@ -134,7 +134,7 @@ export default {
           </div>
           <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
           <br/>
-          <div class="subtitle">Type in your imagination and watch it come to life!</div>
+          <div class="subtitle">{{typedText}}</div>
           <form ng-submit="generateImage()">
             <input type="text" ng-model="prompt" placeholder="Describe your image..." required />
             <button type="submit">Generate Image</button>
@@ -159,6 +159,21 @@ export default {
               $scope.loading = false;
               $scope.imageData = null;
               $scope.canShare = !!navigator.share;
+              $scope.typedText = "";
+
+// Typing effect for subtitle
+const fullText = "Type in your imagination and watch it come to life!";
+let index = 0;
+
+function typeWriter() {
+  if (index < fullText.length) {
+    $scope.typedText += fullText.charAt(index);
+    index++;
+    setTimeout(typeWriter, 50);
+    $scope.$applyAsync();
+  }
+}
+typeWriter();
 
               // Theme logic
               $scope.darkMode = false;
