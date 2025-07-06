@@ -10,65 +10,112 @@ export default {
         <title>Dream Machine</title>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
         <style>
+          :root {
+            --bg-color: #f0f0f5;
+            --text-color: #000;
+            --header-bg: #fff;
+            --border-color: #ccc;
+            --button-bg: #e0e0e0;
+            --button-text: #000;
+          }
+
+          body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #eee;
+            --header-bg: #1e1e1e;
+            --border-color: #444;
+            --button-bg: #333;
+            --button-text: #eee;
+          }
+
           body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f0f5;
+            background-color: var(--bg-color);
+            color: var(--text-color);
           }
+
           .header {
             position: fixed;
             top: 0;
             width: 100%;
-            background: #fff;
+            background: var(--header-bg);
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 1000;
             text-align: center;
           }
-          .page-header {
-            font-size: 28.8px; /* Increased 20% from 24px */
+
+          .theme-toggle {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 14px;
           }
+
+          .page-header {
+            font-size: 28.8px;
+          }
+
           .subtitle {
             font-size: 16px;
-            color: #555;
+            color: var(--text-color);
           }
+
           .content {
-            margin-top: 180px;
+            margin-top: 200px;
             text-align: center;
           }
+
           input[type="text"] {
             width: 300px;
             padding: 10px;
             font-size: 16px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
           }
+
           button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
             margin: 10px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
           }
+
           .loader {
             font-size: 18px;
             margin-top: 10px;
-            color: #888;
+            color: var(--text-color);
           }
+
           .image-container {
             margin-top: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
           }
+
           img {
             max-width: 90vw;
             max-height: 70vh;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             margin-bottom: 15px;
           }
         </style>
       </head>
-      <body ng-app="dreamApp" ng-controller="MyController">
+      <body ng-app="dreamApp" ng-controller="MyController" ng-class="theme">
         <div class="header">
+          <div class="theme-toggle">
+            <label>
+              <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" /> 🌗 Dark Mode
+            </label>
+          </div>
           <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
           <br/>
           <div class="subtitle">Type in your imagination and watch it come to life!</div>
@@ -96,6 +143,14 @@ export default {
               $scope.loading = false;
               $scope.imageData = null;
               $scope.canShare = !!navigator.share;
+
+              // Theme logic
+              $scope.darkMode = false;
+              $scope.theme = '';
+
+              $scope.toggleTheme = function() {
+                $scope.theme = $scope.darkMode ? 'dark-mode' : '';
+              };
 
               $scope.generateImage = function() {
                 $scope.loading = true;
