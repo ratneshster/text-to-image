@@ -46,12 +46,15 @@ export default {
     text-align: center;
   }
 
-  .theme-toggle {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    font-size: 14px;
-  }
+ .theme-toggle {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+.theme-toggle label {
+  cursor: pointer;
+}
+
 
   .page-header {
     font-size: 28.8px;
