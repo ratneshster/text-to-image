@@ -46,10 +46,17 @@ export default {
     text-align: center;
   }
 
- .theme-toggle {
-  margin-top: 10px;
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   font-size: 14px;
-  text-align: center;
+  max-width: 120px;
+  white-space: nowrap;
+  background-color: var(--header-bg);
+  padding: 4px 8px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 .theme-toggle label {
   cursor: pointer;
@@ -130,9 +137,10 @@ export default {
       </head>
       <body ng-app="dreamApp" ng-controller="MyController" ng-class="theme">
         <div class="header">
-          <div class="theme-toggle">
+         <div class="theme-toggle">
             <label>
-              <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" /> Dark Mode
+              <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" />
+              Dark Mode
             </label>
           </div>
           <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
