@@ -8,7 +8,6 @@ export default {
       <html>
       <head>
         <title>Dream Machine</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <style>
   :root {
@@ -36,52 +35,40 @@ export default {
     color: var(--text-color);
   }
 
-.header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: var(--header-bg);
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 1000;
-}
-
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* Responsive behavior for small screens (iPhones, etc.) */
-@media (max-width: 600px) {
-  .header-top {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+  .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: var(--header-bg);
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+    text-align: center;
   }
-}
-
 
 .theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 100px;
   font-size: 14px;
+  max-width: 120px;
+  white-space: nowrap;
   background-color: var(--header-bg);
   padding: 4px 8px;
   border-radius: 5px;
- }
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
 .theme-toggle label {
   cursor: pointer;
 }
 
 
   .page-header {
-    font-size: 30px;
+    font-size: 28.8px;
   }
 
   .subtitle {
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-color);
     animation: fadeSlide 3s ease-in-out infinite alternate;
   }
@@ -107,15 +94,12 @@ export default {
   }
 
   input[type="text"] {
-    width: 90%;
-    max-width: 400px;
+    width: 300px;
     padding: 10px;
     font-size: 16px;
     background-color: var(--bg-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    box-sizing: border-box;
-    
   }
 
   button {
@@ -167,46 +151,25 @@ export default {
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 25px rgba(255, 215, 0, 0.6);
   transform: scale(1.05);
 }
-@media (max-width: 480px) {
-  .page-header {
-    font-size: 24px;
-  }
-
-  .subtitle {
-    font-size: 18px;
-  }
-
-  button, .gold-glow {
-    font-size: 18px;
-    padding: 8px 16px;
-  }
-
-  .header {
-    padding: 15px;
-  }
-}
 </style>
       </head>
       <body ng-app="dreamApp" ng-controller="MyController" ng-class="theme">
-        <div class="header">       
-       
-           <div class="header-top">
-          <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div><br/>
-            <div class="subtitle">{{typedText}}</div>       <br/>
-            <br/>
-           <form ng-submit="generateImage()">
+        <div class="header">
+         <div class="theme-toggle">
+            <label>
+              <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" />
+              Dark Mode
+            </label>
+          </div>
+          <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
+          <br/>
+          <div class="subtitle">{{typedText}}</div>
+          <form ng-submit="generateImage()">
             <input type="text" ng-model="prompt" placeholder="Describe your image..." required />
             <button type="submit" class="gold-glow">Generate Image</button>
           </form>
           <div class="loader" ng-show="loading">Generating image... </div>
-            <div class="theme-toggle">
-                      <label>
-                        <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" />
-                        Dark Mode
-                      </label>
-                  </div>
         </div>
-          </div>
 
         <div class="content">
           <div class="image-container" ng-if="imageData">
