@@ -36,7 +36,7 @@ export default {
     color: var(--text-color);
   }
 
-  .header {
+.header {
   position: fixed;
   top: 0;
   width: 100%;
@@ -44,21 +44,26 @@ export default {
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   z-index: 1000;
-  
-  /* NEW: Flex layout to handle content positioning */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .header-top {
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  align-items: center;
   max-width: 900px;
   margin: 0 auto;
-  align-items: center;
+  padding: 0 20px;
 }
+
+/* Responsive behavior for small screens (iPhones, etc.) */
+@media (max-width: 600px) {
+  .header-top {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
 
 .theme-toggle {
   font-size: 14px;
