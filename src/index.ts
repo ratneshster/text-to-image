@@ -8,6 +8,7 @@ export default {
       <html>
       <head>
         <title>Dream Machine</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <style>
   :root {
@@ -49,10 +50,8 @@ export default {
 .theme-toggle {
   position: absolute;
   top: 20px;
-  right: 100px;
+  right: 10px;
   font-size: 14px;
-  max-width: 120px;
-  white-space: nowrap;
   background-color: var(--header-bg);
   padding: 4px 8px;
   border-radius: 5px;
@@ -94,12 +93,15 @@ export default {
   }
 
   input[type="text"] {
-    width: 300px;
+    width: 90%;
+    max-width: 400px;
     padding: 10px;
     font-size: 16px;
     background-color: var(--bg-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
+    box-sizing: border-box;
+    
   }
 
   button {
@@ -150,6 +152,24 @@ export default {
 .gold-glow:hover {
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 25px rgba(255, 215, 0, 0.6);
   transform: scale(1.05);
+}
+@media (max-width: 480px) {
+  .page-header {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  button, .gold-glow {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .header {
+    padding: 15px;
+  }
 }
 </style>
       </head>
