@@ -194,12 +194,7 @@ export default {
        
            <div class="header-top">
           <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
-                <div class="theme-toggle">
-                      <label>
-                        <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" />
-                        Dark Mode
-                      </label>
-                  </div>
+              
             </div>
               <br/>
   <div class="subtitle">{{typedText}}</div>
@@ -208,6 +203,12 @@ export default {
             <button type="submit" class="gold-glow">Generate Image</button>
           </form>
           <div class="loader" ng-show="loading">Generating image... </div>
+            <div class="theme-toggle">
+                      <label>
+                        <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" />
+                        Dark Mode
+                      </label>
+                  </div>
         </div>
 
         <div class="content">
