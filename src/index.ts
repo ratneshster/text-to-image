@@ -25,9 +25,12 @@ export default {
             z-index: 1000;
             text-align: center;
           }
+          .page-header {
+            font-size: 28.8px; /* Increased 20% from 24px */
+          }
           .subtitle {
             font-size: 16px;
-            color: #080707;
+            color: #555;
           }
           .content {
             margin-top: 180px;
@@ -67,20 +70,21 @@ export default {
       <body ng-app="dreamApp" ng-controller="MyController">
         <div class="header">
           <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
+          <br/>
           <div class="subtitle">Type in your imagination and watch it come to life!</div>
           <form ng-submit="generateImage()">
             <input type="text" ng-model="prompt" placeholder="Describe your image..." required />
             <button type="submit">Generate Image</button>
           </form>
-          <div class="loader" ng-show="loading">Generating image...</div>
+          <div class="loader" ng-show="loading">⏳ Generating image...</div>
         </div>
 
         <div class="content">
           <div class="image-container" ng-if="imageData">
             <img ng-src="{{imageData}}" alt="Generated Image" />
             <div>
-              <button ng-click="downloadImage()">Download</button>
-              <button ng-click="shareImage()" ng-disabled="!canShare">Share</button>
+              <button ng-click="downloadImage()">⬇️ Download</button>
+              <button ng-click="shareImage()" ng-disabled="!canShare">📤 Share</button>
             </div>
           </div>
         </div>
