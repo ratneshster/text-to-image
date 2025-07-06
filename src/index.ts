@@ -49,7 +49,7 @@ export default {
 .theme-toggle {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 100px;
   font-size: 14px;
   max-width: 120px;
   white-space: nowrap;
@@ -133,6 +133,24 @@ export default {
     border-radius: 8px;
     margin-bottom: 15px;
   }
+  .gold-glow {
+  padding: 10px 24px;
+  font-size: 16px;
+  color: white;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 10px;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.4);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  font-weight: bold;
+}
+
+.gold-glow:hover {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 25px rgba(255, 215, 0, 0.6);
+  transform: scale(1.05);
+}
 </style>
       </head>
       <body ng-app="dreamApp" ng-controller="MyController" ng-class="theme">
@@ -148,7 +166,7 @@ export default {
           <div class="subtitle">{{typedText}}</div>
           <form ng-submit="generateImage()">
             <input type="text" ng-model="prompt" placeholder="Describe your image..." required />
-            <button type="submit">Generate Image</button>
+            <button type="submit" class="gold-glow">Generate Image</button>
           </form>
           <div class="loader" ng-show="loading">Generating image... </div>
         </div>
