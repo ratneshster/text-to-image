@@ -13,7 +13,7 @@ export default {
           body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f3f3f3;
+            background-color: #f0f0f5;
           }
           .header {
             position: fixed;
@@ -27,7 +27,7 @@ export default {
           }
           .subtitle {
             font-size: 16px;
-            color: #555;
+            color: #080707;
           }
           .content {
             margin-top: 180px;
@@ -42,41 +42,46 @@ export default {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            margin: 10px;
           }
           .loader {
-            font-size: 20px;
-            margin: 20px;
-            display: none;
+            font-size: 18px;
+            margin-top: 10px;
+            color: #888;
           }
           .image-container {
             margin-top: 30px;
-            max-width: 90vw;
-            max-height: 80vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
           }
           img {
-            max-width: 100%;
-            height: auto;
+            max-width: 90vw;
+            max-height: 70vh;
             border: 1px solid #ccc;
-            border-radius: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
           }
         </style>
       </head>
       <body ng-app="dreamApp" ng-controller="MyController">
         <div class="header">
-          <div class="page-header">Welcome to Your Dream Machine</div>
+          <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
           <div class="subtitle">Type in your imagination and watch it come to life!</div>
           <form ng-submit="generateImage()">
             <input type="text" ng-model="prompt" placeholder="Describe your image..." required />
             <button type="submit">Generate Image</button>
           </form>
-          <div class="loader" ng-show="loading">⏳ Generating image...</div>
+          <div class="loader" ng-show="loading">Generating image...</div>
         </div>
 
         <div class="content">
           <div class="image-container" ng-if="imageData">
-            <img ng-src="{{imageData}}" alt="Generated image" />
+            <img ng-src="{{imageData}}" alt="Generated Image" />
+            <div>
+              <button ng-click="downloadImage()">Download</button>
+              <button ng-click="shareImage()" ng-disabled="!canShare">Share</button>
+            </div>
           </div>
         </div>
 
@@ -86,6 +91,7 @@ export default {
               $scope.prompt = "cyberpunk cat";
               $scope.loading = false;
               $scope.imageData = null;
+              $scope.canShare = !!navigator.share;
 
               $scope.generateImage = function() {
                 $scope.loading = true;
@@ -95,18 +101,42 @@ export default {
                   responseType: 'arraybuffer'
                 }).then(function(response) {
                   const blob = new Blob([response.data], { type: 'image/png' });
+                  const url = URL.createObjectURL(blob);
                   const reader = new FileReader();
                   reader.onload = function(e) {
                     $scope.$apply(function() {
                       $scope.imageData = e.target.result;
+                      $scope.blobUrl = url;
                       $scope.loading = false;
                     });
                   };
                   reader.readAsDataURL(blob);
-                }).catch(function(error) {
-                  console.error('Image generation failed', error);
+                }).catch(function(err) {
+                  console.error('Generation failed', err);
                   $scope.loading = false;
                 });
+              };
+
+              $scope.downloadImage = function() {
+                const a = document.createElement('a');
+                a.href = $scope.imageData;
+                a.download = "dream-image.png";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              };
+
+              $scope.shareImage = function() {
+                fetch($scope.imageData)
+                  .then(res => res.blob())
+                  .then(blob => {
+                    const file = new File([blob], "dream-image.png", { type: "image/png" });
+                    navigator.share({
+                      title: "My Dream Image",
+                      text: "Check out this image I created!",
+                      files: [file]
+                    }).catch(console.error);
+                  });
               };
             }]);
         </script>
@@ -120,6 +150,7 @@ export default {
 
     if (url.pathname === "/generate") {
       const prompt = url.searchParams.get("prompt") || "cyberpunk cat";
+
       const inputs = { prompt };
 
       const response = await env.AI.run(
