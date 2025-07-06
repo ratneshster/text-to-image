@@ -9,12 +9,25 @@ export default {
         <html>
         <head>
           <title>Your Image Generator</title>
-        </head>
-        <body>
-          <h1>🖼️ Your Image Generator</h1>
+          <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+        <style>
+        .page-header {
+          text-align: center;
+          font-size: 24px;
+          font-weight: bold;
+          margin-top: 40px;
+        }
+        </style>
+      </head>
+        <body ng-controller="MyController">
+        <div class="page-header">
+        Hello there, I am your instant Image Creator. Making your imagination live.
+        </div>
+          <h1>Your Image Generator</h1>
           <form action="/generate" method="get">
-            <label for="prompt">Enter a prompt(The Impage you want):</label><br/>
-            <input type="text" id="prompt" name="prompt" value="cyberpunk cat" required />
+           <label for="name"></label><br/><br/>
+            <label for="prompt">Enter a prompt(The Impage you want):</label><br/><br/>
+            <input type="text" id="prompt" name="prompt" value="cyberpunk cat" required /><br/>
             <button type="submit">Generate Image</button>
           </form>
         </body>
