@@ -37,20 +37,30 @@ export default {
   }
 
   .header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: var(--header-bg);
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    z-index: 1000;
-    text-align: center;
-  }
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: var(--header-bg);
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  
+  /* NEW: Flex layout to handle content positioning */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  align-items: center;
+}
 
 .theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 10px;
   font-size: 14px;
   background-color: var(--header-bg);
   padding: 4px 8px;
@@ -175,15 +185,19 @@ export default {
       </head>
       <body ng-app="dreamApp" ng-controller="MyController" ng-class="theme">
         <div class="header">
-         <div class="theme-toggle">
-            <label>
-              <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" />
-              Dark Mode
-            </label>
-          </div>
+        
+       
+           <div class="header-top">
           <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
-          <br/>
-          <div class="subtitle">{{typedText}}</div>
+                <div class="theme-toggle">
+                      <label>
+                        <input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()" />
+                        Dark Mode
+                      </label>
+                  </div>
+            </div>
+              <br/>
+  <div class="subtitle">{{typedText}}</div>
           <form ng-submit="generateImage()">
             <input type="text" ng-model="prompt" placeholder="Describe your image..." required />
             <button type="submit" class="gold-glow">Generate Image</button>
