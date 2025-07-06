@@ -188,15 +188,14 @@ export default {
 </style>
       </head>
       <body ng-app="dreamApp" ng-controller="MyController" ng-class="theme">
-        <div class="header">
-        
+        <div class="header">       
        
            <div class="header-top">
           <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
-              
+            <div class="subtitle">{{typedText}}</div>       <br/>
             </div>
               <br/>
-  <div class="subtitle">{{typedText}}</div>
+        
           <form ng-submit="generateImage()">
             <input type="text" ng-model="prompt" placeholder="Describe your image..." required />
             <button type="submit" class="gold-glow">Generate Image</button>
