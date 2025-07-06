@@ -77,11 +77,11 @@ export default {
 
 
   .page-header {
-    font-size: 28.8px;
+    font-size: 30px;
   }
 
   .subtitle {
-    font-size: 16px;
+    font-size: 18px;
     color: var(--text-color);
     animation: fadeSlide 3s ease-in-out infinite alternate;
   }
@@ -169,15 +169,15 @@ export default {
 }
 @media (max-width: 480px) {
   .page-header {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .subtitle {
-    font-size: 14px;
+    font-size: 18px;
   }
 
   button, .gold-glow {
-    font-size: 14px;
+    font-size: 18px;
     padding: 8px 16px;
   }
 
@@ -191,12 +191,10 @@ export default {
         <div class="header">       
        
            <div class="header-top">
-          <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div>
+          <div class="page-header"><strong>Welcome to Your Dream Machine</strong></div><br/>
             <div class="subtitle">{{typedText}}</div>       <br/>
-            </div>
-              <br/>
-        
-          <form ng-submit="generateImage()">
+            <br/>
+           <form ng-submit="generateImage()">
             <input type="text" ng-model="prompt" placeholder="Describe your image..." required />
             <button type="submit" class="gold-glow">Generate Image</button>
           </form>
@@ -208,6 +206,7 @@ export default {
                       </label>
                   </div>
         </div>
+          </div>
 
         <div class="content">
           <div class="image-container" ng-if="imageData">
