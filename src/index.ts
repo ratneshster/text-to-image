@@ -25,9 +25,7 @@ export default {
 <html lang="en" ng-app="AIApp">
 <head>
   <meta charset="UTF-8" />
-   <title>Dream Machine 
-   </br>Type in your imagination and watch it come to life! </title>
-
+  <title>AI Model Interface</title>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <style>
     body {
@@ -140,7 +138,6 @@ export default {
 
 </body>
 </html>`;
-
       return new Response(html, {
         headers: { 'Content-Type': 'text/html' }
       });
