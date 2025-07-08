@@ -174,7 +174,7 @@ export default {
     angular.module('dreamApp', [])
     .controller('MyController', ['$scope', '$http', function($scope, $http) {
       $scope.prompt = "cyberpunk cat";
-      $scope.gifPrompt = "dancing robot";
+      $scope.gifPrompt = "Bear - This featuer is brewing....";
       $scope.loading = false;
       $scope.imageData = null;
       $scope.gifData = null;
@@ -283,7 +283,7 @@ export default {
 
     // GIF generation endpoint — currently using a placeholder GIF
     if (url.pathname === "/generate-gif") {
-      const gifURL = "https://media.giphy.com/media/IThjAlJnD9WNO/giphy.gif"; // dancing robot
+      const gifURL = "https://media.giphy.com/media/IThjAlJnD9WNO/giphy.gif"; // Bear
       const gifResponse = await fetch(gifURL);
       const gifBlob = await gifResponse.arrayBuffer();
       return new Response(gifBlob, {
