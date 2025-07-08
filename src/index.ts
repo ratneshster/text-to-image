@@ -22,38 +22,49 @@ export default {
 
     if (request.method === 'GET' && path === '/') {
       const html = `<!DOCTYPE html>
-<html ng-app="AIApp">
+<!DOCTYPE html>
+<html lang="en" ng-app="AIApp">
 <head>
-  <title>AI Multi-Model Demo</title>
+  <meta charset="UTF-8" />
+  <title>AI Model Interface</title>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f9f9f9;
       padding: 20px;
-      background: #f5f5f5;
     }
-    select, input, button {
-      margin: 10px 0;
-      padding: 8px;
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    input, select, button {
       width: 100%;
-      max-width: 400px;
+      padding: 10px;
+      margin: 10px 0;
     }
     img, audio {
-      margin-top: 20px;
+      display: block;
+      margin-top: 15px;
       max-width: 100%;
     }
-    .output-box {
-      margin-top: 20px;
-      background: white;
+    .output {
+      background: #f3f3f3;
       padding: 10px;
+      margin-top: 20px;
       border: 1px solid #ccc;
     }
   </style>
 </head>
-<body ng-controller="MainController">
-  <h1>AI Model Interface</h1>
+<body>
 
-  <label>Select Feature:</label>
+<div class="container" ng-controller="MainController">
+  <h2>AI Multi-Model Interface</h2>
+
+  <label>Choose a feature:</label>
   <select ng-model="feature">
     <option value="text-to-image">Text to Image</option>
     <option value="text-to-speech">Text to Speech</option>
@@ -61,72 +72,73 @@ export default {
   </select>
 
   <label>Enter Prompt/Text:</label>
-  <input type="text" ng-model="userInput" placeholder="Enter your prompt here" />
+  <input type="text" ng-model="userInput" placeholder="e.g. A futuristic city at sunset" />
 
   <button ng-click="submit()">Generate</button>
 
-  <div class="output-box" ng-if="imageUrl">
-    <img ng-src="{{ imageUrl }}" alt="Generated Image" />
+  <div class="output" ng-if="imageUrl">
+    <img ng-src="{{ imageUrl }}" alt="Generated Image">
   </div>
 
-  <div class="output-box" ng-if="audioUrl">
+  <div class="output" ng-if="audioUrl">
     <audio controls>
       <source ng-src="{{ audioUrl }}" type="audio/mpeg">
-      Your browser does not support audio playback.
     </audio>
   </div>
 
-  <div class="output-box" ng-if="jsonOutput">
+  <div class="output" ng-if="jsonOutput">
     <pre>{{ jsonOutput | json }}</pre>
   </div>
+</div>
 
-  <script>
-    angular.module('AIApp', [])
-    .controller('MainController', function($scope, $http) {
+<script>
+  angular.module('AIApp', [])
+    .controller('MainController', ['$scope', '$http', function($scope, $http) {
       $scope.feature = 'text-to-image';
       $scope.userInput = '';
       $scope.imageUrl = '';
       $scope.audioUrl = '';
       $scope.jsonOutput = null;
 
-      $scope.submit = async function() {
+      $scope.submit = function() {
         $scope.imageUrl = '';
         $scope.audioUrl = '';
         $scope.jsonOutput = null;
 
-        try {
-          const res = await fetch(\`/\${$scope.feature}\`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              prompt: $scope.userInput,
-              text: $scope.userInput
-            })
-          });
-
+        fetch(`/${$scope.feature}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: $scope.userInput,
+            text: $scope.userInput
+          })
+        })
+        .then(async (res) => {
           if ($scope.feature === 'text-to-speech') {
             const blob = await res.blob();
             $scope.audioUrl = URL.createObjectURL(blob);
-          } else if ($scope.feature === 'text-to-image' || $scope.feature === 'gif-generator') {
+          } else {
             const json = await res.json();
             const image = json.image || json.output?.[0] || json.url || '';
-            $scope.imageUrl = image.startsWith('http') ? image : \`data:image/jpeg;base64,\${image}\`;
+            if (image.startsWith('http')) {
+              $scope.imageUrl = image;
+            } else if (image) {
+              $scope.imageUrl = `data:image/jpeg;base64,${image}`;
+            }
             $scope.jsonOutput = json;
-          } else {
-            $scope.jsonOutput = await res.json();
           }
-
           $scope.$apply();
-        } catch (err) {
-          console.error(err);
-          alert('Error occurred. Check console.');
-        }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          alert('Something went wrong. See console.');
+        });
       };
-    });
-  </script>
-</body>
-</html>`;
+    }]);
+</script>
 
+</body>
+</html>
       return new Response(html, {
         headers: { 'Content-Type': 'text/html' }
       });
