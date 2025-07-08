@@ -2,7 +2,7 @@ export async function handleTextToImage(request: Request, env: any): Promise<Res
   const { prompt } = await request.json();
 
   try {
-    const result = await env.AI.run('@cf/stability/stable-diffusion-v1-4', {
+    const result = await env.AI.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', {
       prompt: prompt || 'a dreamlike sunset over a futuristic city',
     });
 
