@@ -4,7 +4,7 @@ export async function handleTextToSpeech(request: Request, env: any): Promise<Re
   try {
     const result = await env.AI.run('@cf/openai/tts-1', {
       text: text || 'Hello from your AI assistant!',
-      voice: 'alloy' // You can use alloy, echo, fable, onyx, nova, or shimmer
+      voice: 'alloy'
     });
 
     return new Response(result.audio, {
@@ -20,4 +20,3 @@ export async function handleTextToSpeech(request: Request, env: any): Promise<Re
     });
   }
 }
-
