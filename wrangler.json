@@ -1,12 +1,12 @@
 {
-  "compatibility_date": "2025-04-01",
-  "main": "src/index.ts",
-  "name": "text-to-image",
-  "upload_source_maps": true,
+  "name": "cloudflare-multi-model",
+  "compatibility_date": "2024-07-08",
   "ai": {
-    "binding": "AI"
-  },
-  "observability": {
-    "enabled": true
+    "binding": "AI",
+    "run": [
+      { "name": "@cf/stability/stable-diffusion-v1-4" },
+      { "name": "@cf/openai/tts-1" },
+      { "name": "@cf/lykon/dreamshaper-8-lcm" }
+    ]
   }
 }
