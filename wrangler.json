@@ -5,8 +5,7 @@
   "upload_source_maps": true,
   "ai": {
     "binding": "AI",
-    "run": [
-     "run": [
+  "run": [
       { "name": "@cf/stability/stable-diffusion-v1-5" },
       { "name": "@cf/openai/tts-1" },
       { "name": "@cf/lykon/dreamshaper-8-lcm" }
