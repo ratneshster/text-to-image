@@ -230,4 +230,99 @@ export default {
                 $http.get('/generate?prompt=' + encodeURIComponent($scope.prompt), { responseType: 'arraybuffer' })
                 .then(function(response) {
                   const blob = new Blob([response.data], { type: 'image/png' });
-                  const reader = new FileReader
+                  const reader = new FileReader();
+                  reader.onload = function(e) {
+                    $scope.$apply(() => {
+                      $scope.imageData = e.target.result;
+                      $scope.loading = false;
+                    });
+                  };
+                  reader.readAsDataURL(blob);
+                }).catch(err => {
+                  console.error('Generation failed', err);
+                  $scope.loading = false;
+                });
+              };
+
+              $scope.generateGIF = function() {
+                $scope.loading = true;
+                $scope.gifData = null;
+                $http.get('/generate-gif?prompt=' + encodeURIComponent($scope.gifPrompt), { responseType: 'arraybuffer' })
+                .then(function(response) {
+                  const blob = new Blob([response.data], { type: 'image/gif' });
+                  const reader = new FileReader();
+                  reader.onload = function(e) {
+                    $scope.$apply(() => {
+                      $scope.gifData = e.target.result;
+                      $scope.loading = false;
+                    });
+                  };
+                  reader.readAsDataURL(blob);
+                }).catch(err => {
+                  console.error('GIF generation failed', err);
+                  $scope.loading = false;
+                });
+              };
+
+              $scope.downloadImage = function() {
+                const a = document.createElement('a');
+                a.href = $scope.imageData;
+                a.download = "dream-image.png";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              };
+
+              $scope.downloadGIF = function() {
+                const a = document.createElement('a');
+                a.href = $scope.gifData;
+                a.download = "animated-image.gif";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              };
+
+              $scope.shareImage = function() {
+                fetch($scope.imageData)
+                  .then(res => res.blob())
+                  .then(blob => {
+                    const file = new File([blob], "dream-image.png", { type: "image/png" });
+                    navigator.share({
+                      title: "My Dream Image",
+                      text: "Check out this image I created!",
+                      files: [file]
+                    }).catch(console.error);
+                  });
+              };
+            }]);
+        </script>
+      </body>
+      </html>
+      `;
+      return new Response(html, {
+        headers: { "content-type": "text/html" },
+      });
+    }
+
+    // Static image generation endpoint
+    if (url.pathname === "/generate") {
+      const prompt = url.searchParams.get("prompt") || "cyberpunk cat";
+      const inputs = { prompt };
+      const response = await env.AI.run("@cf/stabilityai/stable-diffusion-xl-base-1.0", inputs);
+      return new Response(response, {
+        headers: { "content-type": "image/png" },
+      });
+    }
+
+    // Animated GIF generation endpoint (placeholder logic)
+    if (url.pathname === "/generate-gif") {
+      // Replace this with actual GIF generation logic
+      return new Response("GIF generation not implemented yet", {
+        status: 501,
+        headers: { "content-type": "text/plain" },
+      });
+    }
+
+    return new Response("404 Not Found", { status: 404 });
+  },
+};
