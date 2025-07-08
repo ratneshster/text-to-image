@@ -315,13 +315,28 @@ export default {
     }
 
     // Animated GIF generation endpoint (placeholder logic)
-    if (url.pathname === "/generate-gif") {
-      // Replace this with actual GIF generation logic
-      return new Response("GIF generation not implemented yet", {
-        status: 501,
-        headers: { "content-type": "text/plain" },
-      });
-    }
+    // Animated GIF generation using Workers AI
+if (url.pathname === "/generate-gif") {
+  const prompt = url.searchParams.get("prompt") || "dancing robot";
+  const inputs = { prompt };
+
+  try {
+    const response = await env.AI.run(
+      '@cf/lykon/dreamshaper-8-lcm',
+      inputs
+    );
+
+    return new Response(response, {
+      headers: { "content-type": "image/png" }, // same format as image, not actual .gif
+    });
+  } catch (error) {
+    return new Response("Failed to generate animated image", {
+      status: 500,
+      headers: { "content-type": "text/plain" },
+    });
+  }
+}
+
 
     return new Response("404 Not Found", { status: 404 });
   },
