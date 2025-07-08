@@ -22,11 +22,12 @@ export default {
 
     if (request.method === 'GET' && path === '/') {
       const html = `<!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en" ng-app="AIApp">
 <head>
   <meta charset="UTF-8" />
-  <title>AI Model Interface</title>
+   <title>Dream Machine 
+   </br>Type in your imagination and watch it come to life! </title>
+
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <style>
     body {
@@ -105,7 +106,7 @@ export default {
         $scope.audioUrl = '';
         $scope.jsonOutput = null;
 
-        fetch(`/${$scope.feature}`, {
+        fetch(\`/\${$scope.feature}\`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -123,7 +124,7 @@ export default {
             if (image.startsWith('http')) {
               $scope.imageUrl = image;
             } else if (image) {
-              $scope.imageUrl = `data:image/jpeg;base64,${image}`;
+              $scope.imageUrl = \`data:image/jpeg;base64,\${image}\`;
             }
             $scope.jsonOutput = json;
           }
@@ -138,7 +139,8 @@ export default {
 </script>
 
 </body>
-</html>
+</html>`;
+
       return new Response(html, {
         headers: { 'Content-Type': 'text/html' }
       });
