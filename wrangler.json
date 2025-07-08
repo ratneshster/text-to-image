@@ -4,12 +4,7 @@
   "name": "text-to-image",
   "upload_source_maps": true,
   "ai": {
-    "binding": "AI",
-  "run": [
-      { "name": "@cf/stability/stable-diffusion-v1-5" },
-      { "name": "@cf/openai/tts-1" },
-      { "name": "@cf/lykon/dreamshaper-8-lcm" }
-    ]
+    "binding": "AI"
   },
   "observability": {
     "enabled": true
