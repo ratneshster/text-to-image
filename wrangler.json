@@ -6,7 +6,8 @@
   "ai": {
     "binding": "AI",
     "run": [
-      { "name": "@cf/stability/stable-diffusion-v1-4" },
+     "run": [
+      { "name": "@cf/stability/stable-diffusion-v1-5" },
       { "name": "@cf/openai/tts-1" },
       { "name": "@cf/lykon/dreamshaper-8-lcm" }
     ]
