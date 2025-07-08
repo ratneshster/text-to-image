@@ -20,11 +20,12 @@ export default {
       }
     }
 
-    if (path === '/') {
-      return new Response(
-        `<html><body><h1>Welcome to Multi-Model AI Worker</h1></body></html>`,
-        { headers: { 'Content-Type': 'text/html' } }
-      );
+    // Serve frontend
+    if (request.method === 'GET' && path === '/') {
+      const html = await fetch('https://your-bucket-or-static-source/index.html');
+      return new Response(await html.text(), {
+        headers: { 'Content-Type': 'text/html' }
+      });
     }
 
     return new Response('Method Not Allowed', { status: 405 });
