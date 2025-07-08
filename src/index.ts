@@ -25,7 +25,7 @@ export default {
 <html lang="en" ng-app="AIApp">
 <head>
   <meta charset="UTF-8" />
-  <title>AI Model Interface</title>
+  <title>Dream Machine</title>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <style>
     body {
