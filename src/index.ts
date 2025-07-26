@@ -3,7 +3,7 @@ export default {
     const url = new URL(request.url);
 
     // Style modifier for all image prompts
-    const styleMod = "Minimalistic pastel background, modern flat-style design, soft lighting, high aesthetic appeal, social-media friendly composition, clean white space, light tones, centered subject with gentle shadows, perfect for Instagram or Pinterest";
+    const styleMod = " social-media friendly composition,  trendy, realistic, eye-catching,non-robotic, positive,lively,natural";
 
         if (url.pathname === "/") {
       const html = `
@@ -14,20 +14,73 @@ export default {
   <title>Dream Machine</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #f8f8f8;
       text-align: center;
-      margin: 40px;
-      background-color: #e6f0f3; /* Soothing, colorblind-friendly */
-      color: #333;
+    }
+      nav {
+      display: flex;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 10px 0;
+      border-bottom: 2px solid #0ff;
+    }
+
+    nav a {
+      color: #0ff;
+      text-decoration: none;
+      margin: 0 20px;
+      font-weight: bold;
+      position: relative;
+      padding: 8px 12px;
+      transition: color 0.3s, background-color 0.3s;
+      border-radius: 4px;
+    }
+
+    nav a:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      color: #0ff;
+      padding: 4px 8px;
+      border: 1px solid #0ff;
+      border-radius: 4px;
+      font-size: 0.8em;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      color: #fff;
+    }
+
+    nav a.active {
+      background-color: #0ff;
+      color: #000;
+    }
+    h1 {
+      font-size: 2.8em;
+      margin-top: 40px;
+    }
+    .input-container {
+      margin: 30px auto;
+      width: 90%;
+      max-width: 600px;
     }
     .title {
       font-size: 2.5em;
-      margin-bottom: 10px;
+      margin-top: 20px;
+      margin-bottom: 20px;
       font-weight: bold;
     }
     .subtitle {
       font-size: 1.2em;
       margin-bottom: 30px;
+      margin-top: 30px;
       color: #555;
     }
     .mode-options {
@@ -38,59 +91,77 @@ export default {
       gap: 8px;
     }
     input[type="text"] {
-      width: 60%;
-      padding: 10px;
-      margin-top: 20px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.2em;
+      background-color: #1a1a2e;
+      color: #0ff;
+      box-shadow: 0 0 10px #0ff;
     }
     button {
       margin-top: 20px;
-      padding: 10px 20px;
+      padding: 14px 30px;
       font-size: 1em;
       border: none;
-      border-radius: 4px;
-      background-color: #4cafaa;
-      color: white;
+      border-radius: 6px;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
       cursor: pointer;
+      transition: background 0.3s;
+      box-shadow: 0 0 10px #0ff;
     }
-    button:hover {
-      background-color: #3b9999;
+     button:hover {
+      background: #00f5ff;
     }
-    .output {
-      margin-top: 30px;
+   #output {
+      margin-top: 40px;
+      padding: 20px;
     }
   </style>
 </head>
 <body>
+ <nav id="menu">
+   
+    <a href="#" data-mode="comment" data-tooltip="Struggling with captions? No problem—AI’s got you covered">✏️ Caption</a>
+    <a href="#" data-mode="image" data-tooltip="Turn your words into stunning visuals — no art degree required">🖼️ Image</a>
+    <a href="#" data-mode="avatar" data-tooltip="Meet the AI version of your thoughts">👤 Avatar</a>
+    <a href="#" data-mode="motion" data-tooltip="GIF it life ❤️ — animate your dreams frame by frame">🎞️ Motion</a>
+    <a href="#" data-mode="reroll" data-tooltip="Same prompt, different aesthetic. Tap for a fresh style">🎨 Re-roll</a>
+    <a href="#" data-mode="tts" data-tooltip="Give your thoughts a voice — literally">🔊 TTS</a>
+  </nav>
   <div class="title">
     <img src="https://emojiapi.dev/api/v1/milky_way/64.png" width="32" alt="🌌"> Welcome to Your Dream Machine
   </div>
   <div class="subtitle">Type in your imagination and watch it come to life!</div>
 
-  <div class="mode-options">
-    <label><input type="radio" name="mode" value="image" checked> AI Image Generator</label>
-    <label><input type="radio" name="mode" value="comment"> Caption Generator</label>
-    <label><input type="radio" name="mode" value="avatar"> AI Avatar Generator</label>
-    <label><input type="radio" name="mode" value="motion"> Dream in Motion</label>
-    <label><input type="radio" name="mode" value="reroll"> Style Re-roll</label>
-    <label><input type="radio" name="mode" value="tts"> Text-to-Speech</label>
-  </div>
-
-  <input id="prompt" type="text" placeholder="Enter your prompt..." value="cyberpunk cat">
+ 
+  <input id="prompt" type="text" class="input-container" placeholder="Enter your prompt..." value="cyberpunk cat">
   <br>
   <button onclick="generate()">Generate</button>
 
   <div class="output" id="output"> </div>
 
   <script>
+   document.querySelectorAll('#menu a').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('#menu a').forEach(a => a.classList.remove('active'));
+        el.classList.add('active');
+      });
+    });
     async function generate() {
-      const mode = document.querySelector('input[name="mode"]:checked').value;
+      const active = document.querySelector('#menu a.active');
+      const mode = active?.dataset.mode || 'image';
       const prompt = document.getElementById("prompt").value;
       const output = document.getElementById("output");
 
       output.innerHTML = "<p><em>Generating...</em></p>";
+      
 
+     
       // Only encode in fetch URL, not before
       const response = await fetch(\`/generate?mode=\${mode}&prompt=\${encodeURIComponent(prompt)}\`);
 
