@@ -366,7 +366,7 @@ if (mode === "reroll") {
       }
 
       // Default: image generation (add styleMod)
-      const image = await env.AI.run("@cf/lykon/dreamshaper-8-lcm", { prompt: prompt + styleMod });
+      const image = await env.AI.run("@cf/stabilityai/stable-diffusion-xl-base-1.0", { prompt: prompt + styleMod });
       return new Response(image, { headers: { "content-type": "image/png" } });
     }
 
