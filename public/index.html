@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="dreamApp">
+<head>
+  <meta charset="UTF-8">
+  <title>🌌 Dream Machine</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f0f0f5; color: #333; }
+    .dark-mode { background: #121212; color: #eee; }
+    .header, .features { margin-bottom: 20px; }
+    .feature-option { margin-right: 15px; }
+    img, audio { display: block; margin: 20px auto; max-width: 90vw; }
+    .loader { font-style: italic; color: #888; }
+    .download-btn { display: block; margin: 10px auto; padding: 10px 20px; font-weight: bold; }
+  </style>
+</head>
+<body ng-controller="MainCtrl" ng-class="{ 'dark-mode': darkMode }">
+  <div class="header">
+    <h1>🌌 Dream Machine</h1>
+    <label><input type="checkbox" ng-model="darkMode" ng-change="toggleTheme()"> 🌙 Dark Mode</label>
+  </div>
+  <div class="features">
+    <label class="feature-option" ng-repeat="option in modes">
+      <input type="radio" ng-model="mode" ng-value="option.value"> {{option.label}}
+    </label>
+    <input type="text" ng-model="prompt" placeholder="Enter your prompt" size="50">
+    <button ng-click="submit()">Generate</button>
+    <button ng-click="surprise()">🎲 Surprise Me</button>
+    <div class="loader" ng-if="loading">Processing your {{mode}} request...</div>
+  </div>
+  <div ng-if="imageData"><img ng-src="{{imageData}}"><a ng-href="{{imageData}}" download="image.png" class="download-btn">📥 Download Image</a></div>
+  <div ng-if="audioData"><audio controls><source ng-src="{{audioData}}" type="audio/wav"></audio><a ng-href="{{audioData}}" download="audio.wav" class="download-btn">📥 Download Audio</a></div>
+  <div ng-if="textData"><p>{{textData}}</p><a href="#" ng-click="downloadText()" class="download-btn">📥 Download Caption</a></div>
+  <div ng-if="imageSequence.length">
+    <button ng-click="downloadAsGIF()" class="download-btn">📥 Download GIF</button>
+  </div>
+
+  <script>
+    angular.module("dreamApp", []).controller("MainCtrl", function($scope, $http) {
+      $scope.prompt = "cyberpunk cat";
+      $scope.mode = "image";
+      $scope.imageData = null;
+      $scope.audioData = null;
+      $scope.textData = null;
+      $scope.imageSequence = [];
+      $scope.loading = false;
+      $scope.darkMode = false;
+
+      $scope.modes = [
+        { value: "image", label: "Image Generator" },
+        { value: "motion", label: "Dream in Motion" },
+        { value: "avatar", label: "Avatar Generator" },
+        { value: "reroll", label: "Style Re-roll" },
+        { value: "comment", label: "Auto Comment" },
+        { value: "tts1", label: "Text-to-Speech" }
+      ];
+
+      $scope.toggleTheme = () => document.body.classList.toggle("dark-mode", $scope.darkMode);
+      $scope.surprise = function() {
+        const randomPrompt = ["astronaut in a jungle", "underwater palace", "dancing dragon", "robot jazz band"];
+        const randomMode = $scope.modes[Math.floor(Math.random() * $scope.modes.length)];
+        $scope.prompt = randomPrompt[Math.floor(Math.random() * randomPrompt.length)];
+        $scope.mode = randomMode.value;
+      };
+
+      $scope.submit = function() {
+        $scope.loading = true;
+        $scope.imageData = null;
+        $scope.audioData = null;
+        $scope.textData = null;
+        $scope.imageSequence = [];
+
+        $http.get(`/generate?mode=${$scope.mode}&prompt=` + encodeURIComponent($scope.prompt), { responseType: 'arraybuffer' })
+          .then(res => {
+            $scope.loading = false;
+            if ($scope.mode === 'tts1') {
+              const blob = new Blob([res.data], { type: 'audio/wav' });
+              $scope.audioData = URL.createObjectURL(blob);
+            } else if ($scope.mode === 'comment') {
+              const decoder = new TextDecoder();
+              $scope.textData = decoder.decode(res.data);
+            } else if ($scope.mode === 'motion') {
+              JSZip.loadAsync(res.data).then(zip => {
+                const files = Object.keys(zip.files).sort();
+                return Promise.all(files.map(name => zip.files[name].async('blob')));
+              }).then(blobs => {
+                blobs.forEach(blob => {
+                  const reader = new FileReader();
+                  reader.onload = e => $scope.$apply(() => $scope.imageSequence.push(e.target.result));
+                  reader.readAsDataURL(blob);
+                });
+                $scope.imageData = $scope.imageSequence[0];
+              });
+            } else {
+              const blob = new Blob([res.data], { type: 'image/png' });
+              const reader = new FileReader();
+              reader.onload = e => $scope.$apply(() => $scope.imageData = e.target.result);
+              reader.readAsDataURL(blob);
+            }
+          });
+      };
+
+      $scope.downloadText = function() {
+        const blob = new Blob([$scope.textData], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "caption.txt";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      };
+
+      $scope.downloadAsGIF = function() {
+        const gif = new GIF({ workers: 2, quality: 10 });
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        let index = 0;
+        img.onload = function() {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const addFrame = () => {
+            if (index >= $scope.imageSequence.length) {
+              gif.render(); return;
+            }
+            img.src = $scope.imageSequence[index++];
+            ctx.drawImage(img, 0, 0);
+            gif.addFrame(canvas, { copy: true, delay: 800 });
+            setTimeout(addFrame, 100);
+          };
+          addFrame();
+        };
+        img.src = $scope.imageSequence[0];
+        gif.on('finished', function(blob) {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = "dream-motion.gif";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        });
+      };
+    });
+  </script>
+</body>
+</html>

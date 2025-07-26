@@ -1,0 +1,8 @@
+name = "dream-machine"
+main = "src/index.ts"
+compatibility_date = "2024-07-25"
+
+[ai]
+binding = "AI"
+[build]
+external = ["jszip"]
