@@ -128,9 +128,9 @@ export default {
     <a href="#" data-mode="comment" data-tooltip="Struggling with captions? No problem—AI’s got you covered">✏️ Caption</a>
     <a href="#" data-mode="image" data-tooltip="Turn your words into stunning visuals — no art degree required">🖼️ Image</a>
     <a href="#" data-mode="avatar" data-tooltip="Meet the AI version of your thoughts">👤 Avatar</a>
-    <a href="#" data-mode="motion" data-tooltip="GIF it life ❤️ — animate your dreams frame by frame">🎞️ Motion</a>
+    <a href="#" data-mode="tts" data-tooltip="Give your thoughts a voice — literally">🔊 Text to Speech</a>
+     <a href="#" data-mode="motion" data-tooltip="GIF it life ❤️ — animate your dreams frame by frame">🎞️ Motion</a>
     <a href="#" data-mode="reroll" data-tooltip="Same prompt, different aesthetic. Tap for a fresh style">🎨 Re-roll</a>
-    <a href="#" data-mode="tts" data-tooltip="Give your thoughts a voice — literally">🔊 TTS</a>
   </nav>
   <div class="title">
     <img src="https://emojiapi.dev/api/v1/milky_way/64.png" width="32" alt="🌌"> Welcome to Your Dream Machine
