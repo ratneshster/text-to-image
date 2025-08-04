@@ -347,22 +347,31 @@ if (mode === "reroll") {
       }
 
       if (mode === "tts") {
-        // ...existing TTS code...
         const text = prompt && prompt.trim() ? prompt : "Hello, this is a test.";
-        const audio = await env.AI.run("@cf/myshell-ai/melotts", { prompt: text });
-        if (audio instanceof Response) {
-          if (!audio.ok) {
-            const err = await audio.text();
-            return new Response("TTS Error: " + err, { status: 500 });
-          }
-          const ct = audio.headers.get("content-type") || "";
-          if (ct.startsWith("audio/")) {
-            return audio;
-          }
-          const err = await audio.text();
-          return new Response("TTS Error: " + err, { status: 500 });
+
+        try {
+          // Correctly destructure the output from the run() method
+          const { audio } = await env.AI.run("@cf/myshell-ai/melotts", {
+            prompt: text,
+          });
+
+          // Cloudflare returns a base64 encoded MP3 audio string.
+          // We need to decode it to a Buffer and then a Blob.
+          const audioBlob = new Blob(
+            [Uint8Array.from(atob(audio), (c) => c.charCodeAt(0))],
+            { type: "audio/mpeg" }
+          );
+
+          // Return the audio blob as a new Response object
+          return new Response(audioBlob, {
+            headers: {
+              "content-type": "audio/mpeg",
+            },
+          });
+        } catch (err) {
+          // Use a try/catch block to handle errors gracefully
+          return new Response("TTS Error: " + err.message, { status: 500 });
         }
-        return new Response(audio, { headers: { "content-type": "audio/wav" } });
       }
 
       // Default: image generation (add styleMod)
