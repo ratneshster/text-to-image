@@ -124,8 +124,8 @@ export default {
 </head>
 <body>
  <nav id="menu">
-   
-    <a href="#" data-mode="comment" data-tooltip="Struggling with captions? No problem—AI’s got you covered">✏️ Caption</a>
+    
+    <a href="#" class="active" data-mode="comment" data-tooltip="Struggling with captions? No problem—AI’s got you covered">✏️ Caption</a>
     <a href="#" data-mode="image" data-tooltip="Turn your words into stunning visuals — no art degree required">🖼️ Image</a>
     <a href="#" data-mode="avatar" data-tooltip="Meet the AI version of your thoughts">👤 Avatar</a>
     <a href="#" data-mode="tts" data-tooltip="Give your thoughts a voice — literally">🔊 Text to Speech</a>
@@ -138,13 +138,15 @@ export default {
   <div class="subtitle">Type in your imagination and watch it come to life!</div>
 
  
-  <input id="prompt" type="text" class="input-container" placeholder="Enter your prompt..." value="cyberpunk cat">
+  <input id="prompt" type="text" class="input-container" placeholder="Enter your prompt..." value="Santa Clause surfing in Hawaii">
   <br>
   <button onclick="generate()">Generate</button>
 
   <div class="output" id="output"> </div>
-
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4405845422628757"
+     crossorigin="anonymous"></script>
   <script>
+  
    document.querySelectorAll('#menu a').forEach(el => {
       el.addEventListener('click', e => {
         e.preventDefault();
@@ -152,9 +154,17 @@ export default {
         el.classList.add('active');
       });
     });
+
+   // Ensure a visible selection exists on load (keep Caption selected by default)
+   (function ensureInitialSelection() {
+     if (!document.querySelector('#menu a.active')) {
+       const caption = document.querySelector('#menu a[data-mode="comment"]');
+       if (caption) caption.classList.add('active');
+     }
+   })();
     async function generate() {
       const active = document.querySelector('#menu a.active');
-      const mode = active?.dataset.mode || 'image';
+      const mode = active?.dataset.mode || 'comment';
       const prompt = document.getElementById("prompt").value;
       const output = document.getElementById("output");
 
@@ -217,9 +227,9 @@ output.innerHTML += \`
     }
 
     if (url.pathname === "/generate") {
-      let prompt = url.searchParams.get("prompt") || "cyberpunk cat";
+      let prompt = url.searchParams.get("prompt") || "Santa Clause surfing in Hawaii";
       prompt = decodeURIComponent(prompt);
-      const mode = url.searchParams.get("mode") || "image";
+      const mode = url.searchParams.get("mode") || "comment";
 
       if (mode === "motion") {
         const prompts = [
